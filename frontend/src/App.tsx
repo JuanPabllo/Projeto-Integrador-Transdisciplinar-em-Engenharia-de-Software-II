@@ -1,17 +1,15 @@
-import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { BookOutlined, DesktopOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Layout, Menu, theme } from 'antd';
 import React, { useState } from 'react';
+import { BooksPage } from './pages/books';
+import { MoviesPage } from './pages/movies';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
+
+type StepOptions = 'movies' | 'books';
 
 function getItem(
   label: React.ReactNode,
@@ -28,25 +26,21 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem('Option 1', '1', <PieChartOutlined />),
-  getItem('Option 2', '2', <DesktopOutlined />),
-  getItem('User', 'sub1', <UserOutlined />, [
-    getItem('Tom', '3'),
-    getItem('Bill', '4'),
-    getItem('Alex', '5'),
-  ]),
-  getItem('Team', 'sub2', <TeamOutlined />, [
-    getItem('Team 1', '6'),
-    getItem('Team 2', '8'),
-  ]),
-  getItem('Files', '9', <FileOutlined />),
+  getItem('Filmes', 'movies', <DesktopOutlined />),
+  getItem('Livros', 'books', <BookOutlined />),
 ];
 
 const App: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [step, setStep] = useState<StepOptions>('movies');
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const onClick: MenuProps['onClick'] = (e) => {
+    setStep(e.key as StepOptions);
+  };
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -55,10 +49,10 @@ const App: React.FC = () => {
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
-        <div className="demo-logo-vertical" />
         <Menu
+          onClick={onClick}
           theme="dark"
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={['movies']}
           mode="inline"
           items={items}
         />
@@ -66,10 +60,6 @@ const App: React.FC = () => {
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
         <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
           <div
             style={{
               padding: 24,
@@ -77,12 +67,12 @@ const App: React.FC = () => {
               background: colorBgContainer,
             }}
           >
-            Bill is a cat.
+            {step === 'movies' && <MoviesPage />}
+
+            {step === 'books' && <BooksPage />}
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          Ant Design ©2023 Created by Ant UED
-        </Footer>
+        <Footer style={{ textAlign: 'center' }}>Criado por Juan Pablo</Footer>
       </Layout>
     </Layout>
   );
