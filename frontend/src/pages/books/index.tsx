@@ -22,10 +22,6 @@ export const BooksPage = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -117,7 +113,8 @@ export const BooksPage = () => {
       <Modal
         title="Adicionar novo livro"
         open={isModalOpen}
-        onOk={handleOk}
+        onOk={onFinish}
+        okText="Adicionar"
         onCancel={handleCancel}
       >
         <Form
@@ -144,12 +141,6 @@ export const BooksPage = () => {
               format="DD/MM/YYYY"
               onChange={onChange}
             />
-          </Form.Item>
-
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit">
-              Adicionar
-            </Button>
           </Form.Item>
         </Form>
       </Modal>

@@ -22,10 +22,6 @@ export const MoviesPage = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -117,7 +113,8 @@ export const MoviesPage = () => {
       <Modal
         title="Adicionar novo filme"
         open={isModalOpen}
-        onOk={handleOk}
+        onOk={onFinish}
+        okText="Adicionar"
         onCancel={handleCancel}
       >
         <Form
@@ -126,7 +123,6 @@ export const MoviesPage = () => {
           wrapperCol={{ span: 16 }}
           style={{ maxWidth: 600 }}
           initialValues={{ remember: true }}
-          onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
@@ -144,12 +140,6 @@ export const MoviesPage = () => {
               format="DD/MM/YYYY"
               onChange={onChange}
             />
-          </Form.Item>
-
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit">
-              Adicionar
-            </Button>
           </Form.Item>
         </Form>
       </Modal>
