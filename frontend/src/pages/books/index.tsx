@@ -42,18 +42,36 @@ export const BooksPage = () => {
     console.log(date, dateString);
   };
 
-  const dataSource = [
+  const bookDataSource = [
     {
       key: '1',
-      name: 'Mike',
-      writer: 32,
-      release: '10 Downing Street',
+      name: 'The Catcher in the Rye',
+      writer: 'J.D. Salinger',
+      release: 1951,
     },
     {
       key: '2',
-      name: 'John',
-      writer: 42,
-      release: '10 Downing Street',
+      name: 'To Kill a Mockingbird',
+      writer: 'Harper Lee',
+      release: 1960,
+    },
+    {
+      key: '3',
+      name: '1984',
+      writer: 'George Orwell',
+      release: 1949,
+    },
+    {
+      key: '4',
+      name: 'The Great Gatsby',
+      writer: 'F. Scott Fitzgerald',
+      release: 1925,
+    },
+    {
+      key: '5',
+      name: 'Pride and Prejudice',
+      writer: 'Jane Austen',
+      release: 1813,
     },
   ];
 
@@ -95,7 +113,7 @@ export const BooksPage = () => {
           Adicionar novo livro
         </Button>
       </Flex>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={bookDataSource} columns={columns} />
       <Modal
         title="Adicionar novo livro"
         open={isModalOpen}

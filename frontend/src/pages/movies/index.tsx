@@ -42,18 +42,36 @@ export const MoviesPage = () => {
     console.log(date, dateString);
   };
 
-  const dataSource = [
+  const movieDataSource = [
     {
       key: '1',
-      name: 'Mike',
-      director: 32,
-      release: '10 Downing Street',
+      name: 'The Shawshank Redemption',
+      director: 'Frank Darabont',
+      release: 1994,
     },
     {
       key: '2',
-      name: 'John',
-      director: 42,
-      release: '10 Downing Street',
+      name: 'The Godfather',
+      director: 'Francis Ford Coppola',
+      release: 1972,
+    },
+    {
+      key: '3',
+      name: 'Pulp Fiction',
+      director: 'Quentin Tarantino',
+      release: 1994,
+    },
+    {
+      key: '4',
+      name: 'The Dark Knight',
+      director: 'Christopher Nolan',
+      release: 2008,
+    },
+    {
+      key: '5',
+      name: 'Inception',
+      director: 'Christopher Nolan',
+      release: 2010,
     },
   ];
 
@@ -95,7 +113,7 @@ export const MoviesPage = () => {
           Adicionar novo filme
         </Button>
       </Flex>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={movieDataSource} columns={columns} />
       <Modal
         title="Adicionar novo filme"
         open={isModalOpen}
