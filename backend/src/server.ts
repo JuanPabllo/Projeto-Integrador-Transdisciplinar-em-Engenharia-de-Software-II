@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import { createBookRoute, getBooksRoute } from './routes/books';
 import { createMovieRoute, getMovieRoute } from './routes/movies';
 
 const fastify = Fastify({
@@ -55,6 +56,58 @@ fastify.route({
     },
   },
   handler: getMovieRoute,
+});
+
+fastify.route({
+  method: 'POST',
+  url: '/books',
+  schema: {
+    body: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        writer: { type: 'string' },
+        release: { type: 'string' },
+      },
+      required: ['name', 'writer', 'release'],
+    },
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer' },
+          name: { type: 'string' },
+          writer: { type: 'string' },
+          release: { type: 'string' },
+          createdAt: { type: 'string' },
+        },
+      },
+    },
+  },
+  handler: createBookRoute,
+});
+
+fastify.route({
+  method: 'GET',
+  url: '/books',
+  schema: {
+    response: {
+      200: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            name: { type: 'string' },
+            writer: { type: 'string' },
+            release: { type: 'string' },
+            createdAt: { type: 'string' },
+          },
+        },
+      },
+    },
+  },
+  handler: getBooksRoute,
 });
 
 fastify.listen({ port: 8080 }, function (err, address) {
