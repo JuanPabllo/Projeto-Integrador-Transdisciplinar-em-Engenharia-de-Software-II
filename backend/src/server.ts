@@ -1,28 +1,60 @@
 import Fastify from 'fastify';
-import { CreateMovie } from './routes/movies';
+import { createMovieRoute, getMovieRoute } from './routes/movies';
 
 const fastify = Fastify({
   logger: true,
 });
 
 fastify.route({
-  method: 'GET',
-  url: '/',
+  method: 'POST',
+  url: '/movies',
   schema: {
-    querystring: {
-      name: { type: 'string' },
-      excitement: { type: 'integer' },
+    body: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        director: { type: 'string' },
+        release: { type: 'string' },
+      },
+      required: ['name', 'director', 'release'],
     },
     response: {
       200: {
         type: 'object',
         properties: {
-          hello: { type: 'string' },
+          id: { type: 'integer' },
+          name: { type: 'string' },
+          director: { type: 'string' },
+          release: { type: 'string' },
+          createdAt: { type: 'string' },
         },
       },
     },
   },
-  handler: CreateMovie,
+  handler: createMovieRoute,
+});
+
+fastify.route({
+  method: 'GET',
+  url: '/movies',
+  schema: {
+    response: {
+      200: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            name: { type: 'string' },
+            director: { type: 'string' },
+            release: { type: 'string' },
+            createdAt: { type: 'string' },
+          },
+        },
+      },
+    },
+  },
+  handler: getMovieRoute,
 });
 
 fastify.listen({ port: 8080 }, function (err, address) {
