@@ -11,6 +11,7 @@ import {
   Typography,
 } from 'antd';
 import locale from 'antd/es/date-picker/locale/pt_BR';
+import axios from 'axios';
 import { useState } from 'react';
 import { FieldType } from './types';
 
@@ -26,12 +27,12 @@ export const MoviesPage = () => {
     setIsModalOpen(false);
   };
 
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
+  const onFinish = async (values: FieldType) => {
+    await axios.post('http://localhost:8080/movies', values, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   };
 
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
@@ -113,17 +114,15 @@ export const MoviesPage = () => {
       <Modal
         title="Adicionar novo filme"
         open={isModalOpen}
-        onOk={onFinish}
-        okText="Adicionar"
         onCancel={handleCancel}
+        footer={null}
       >
         <Form
           name="basic"
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
-          onFinishFailed={onFinishFailed}
+          onFinish={onFinish}
           autoComplete="off"
         >
           <Form.Item<FieldType> label="Nome" name="name">
@@ -140,6 +139,12 @@ export const MoviesPage = () => {
               format="DD/MM/YYYY"
               onChange={onChange}
             />
+          </Form.Item>
+
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Button type="primary" htmlType="submit">
+              Enviar
+            </Button>
           </Form.Item>
         </Form>
       </Modal>
