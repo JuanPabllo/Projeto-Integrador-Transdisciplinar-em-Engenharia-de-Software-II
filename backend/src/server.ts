@@ -1,7 +1,15 @@
 import cors from '@fastify/cors';
 import Fastify from 'fastify';
-import { createBookRoute, getBooksRoute } from './routes/books';
-import { createMovieRoute, getMovieRoute } from './routes/movies';
+import {
+  createBookRoute,
+  deleteBookByNameRoute,
+  getBooksRoute,
+} from './routes/books';
+import {
+  createMovieRoute,
+  deleteMovieByNameRoute,
+  getMovieRoute,
+} from './routes/movies';
 
 const fastify = Fastify({
   logger: true,
@@ -65,6 +73,28 @@ fastify.route({
 });
 
 fastify.route({
+  method: 'DELETE',
+  url: '/movies/:name',
+  schema: {
+    params: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+      },
+    },
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          message: { type: 'string' },
+        },
+      },
+    },
+  },
+  handler: deleteMovieByNameRoute,
+});
+
+fastify.route({
   method: 'POST',
   url: '/books',
   schema: {
@@ -114,6 +144,28 @@ fastify.route({
     },
   },
   handler: getBooksRoute,
+});
+
+fastify.route({
+  method: 'DELETE',
+  url: '/books/:name',
+  schema: {
+    params: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+      },
+    },
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          message: { type: 'string' },
+        },
+      },
+    },
+  },
+  handler: deleteBookByNameRoute,
 });
 
 fastify.listen({ port: 8080 }, function (err, address) {

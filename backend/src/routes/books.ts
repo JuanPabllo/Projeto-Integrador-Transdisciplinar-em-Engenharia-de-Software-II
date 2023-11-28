@@ -44,3 +44,30 @@ export const getBooksRoute = async (
     reply.status(500).send({ error: 'Erro ao buscar os livros' });
   }
 };
+
+export const deleteBookByNameRoute = async (
+  request: FastifyRequest<{ Params: { name: string } }>,
+  reply: FastifyReply
+) => {
+  try {
+    const { name } = request.params;
+
+    const existingBook = await prisma.book.findUnique({
+      where: { name },
+    });
+
+    if (!existingBook) {
+      reply.status(404).send({ error: 'Livro não encontrado' });
+      return;
+    }
+
+    await prisma.book.delete({
+      where: { name },
+    });
+
+    reply.send({ message: 'Livro deletado com sucesso' });
+  } catch (error) {
+    console.error(error);
+    reply.status(500).send({ error: 'Erro ao deletar o livro' });
+  }
+};

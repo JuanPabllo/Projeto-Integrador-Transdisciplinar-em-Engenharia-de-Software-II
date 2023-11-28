@@ -44,3 +44,30 @@ export const getMovieRoute = async (
     reply.status(500).send({ error: 'Erro ao buscar o filmes' });
   }
 };
+
+export const deleteMovieByNameRoute = async (
+  request: FastifyRequest<{ Params: { name: string } }>,
+  reply: FastifyReply
+) => {
+  try {
+    const { name } = request.params;
+
+    const existingMovie = await prisma.movie.findUnique({
+      where: { name },
+    });
+
+    if (!existingMovie) {
+      reply.status(404).send({ error: 'Filme não encontrado' });
+      return;
+    }
+
+    await prisma.movie.delete({
+      where: { name },
+    });
+
+    reply.send({ message: 'Filme deletado com sucesso' });
+  } catch (error) {
+    console.error(error);
+    reply.status(500).send({ error: 'Erro ao deletar o filme' });
+  }
+};
