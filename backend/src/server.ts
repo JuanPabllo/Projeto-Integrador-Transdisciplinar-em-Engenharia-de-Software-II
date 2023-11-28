@@ -1,9 +1,15 @@
+import cors from '@fastify/cors';
 import Fastify from 'fastify';
 import { createBookRoute, getBooksRoute } from './routes/books';
 import { createMovieRoute, getMovieRoute } from './routes/movies';
 
 const fastify = Fastify({
   logger: true,
+});
+
+fastify.register(cors, {
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
 });
 
 fastify.route({
