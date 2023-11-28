@@ -2,7 +2,6 @@ import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   Button,
   DatePicker,
-  DatePickerProps,
   Flex,
   Form,
   Input,
@@ -12,11 +11,13 @@ import {
 } from 'antd';
 import locale from 'antd/es/date-picker/locale/pt_BR';
 import axios from 'axios';
-import { useState } from 'react';
+import { format, parseISO } from 'date-fns';
+import { useEffect, useState } from 'react';
 import { FieldType } from './types';
 
 export const MoviesPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [data, setData] = useState([]);
   const { Title } = Typography;
 
   const showModal = () => {
@@ -27,6 +28,24 @@ export const MoviesPage = () => {
     setIsModalOpen(false);
   };
 
+  const fetchData = async () => {
+    const response = await axios.get('http://localhost:8080/movies', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = response.data.map((item: FieldType) => {
+      return {
+        name: item.name,
+        release: format(parseISO(item.release), 'dd/MM/yyyy'),
+        director: item.director,
+      };
+    });
+
+    setData(data);
+  };
+
   const onFinish = async (values: FieldType) => {
     await axios.post('http://localhost:8080/movies', values, {
       headers: {
@@ -34,43 +53,6 @@ export const MoviesPage = () => {
       },
     });
   };
-
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString);
-  };
-
-  const movieDataSource = [
-    {
-      key: '1',
-      name: 'The Shawshank Redemption',
-      director: 'Frank Darabont',
-      release: 1994,
-    },
-    {
-      key: '2',
-      name: 'The Godfather',
-      director: 'Francis Ford Coppola',
-      release: 1972,
-    },
-    {
-      key: '3',
-      name: 'Pulp Fiction',
-      director: 'Quentin Tarantino',
-      release: 1994,
-    },
-    {
-      key: '4',
-      name: 'The Dark Knight',
-      director: 'Christopher Nolan',
-      release: 2008,
-    },
-    {
-      key: '5',
-      name: 'Inception',
-      director: 'Christopher Nolan',
-      release: 2010,
-    },
-  ];
 
   const columns = [
     {
@@ -102,6 +84,10 @@ export const MoviesPage = () => {
     },
   ];
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div>
       <Flex justify="space-between">
@@ -110,7 +96,7 @@ export const MoviesPage = () => {
           Adicionar novo filme
         </Button>
       </Flex>
-      <Table dataSource={movieDataSource} columns={columns} />
+      <Table dataSource={data} columns={columns} />
       <Modal
         title="Adicionar novo filme"
         open={isModalOpen}
@@ -134,11 +120,7 @@ export const MoviesPage = () => {
           </Form.Item>
 
           <Form.Item<FieldType> label="Lançamento" name="release">
-            <DatePicker
-              locale={locale}
-              format="DD/MM/YYYY"
-              onChange={onChange}
-            />
+            <DatePicker locale={locale} format="DD/MM/YYYY" />
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

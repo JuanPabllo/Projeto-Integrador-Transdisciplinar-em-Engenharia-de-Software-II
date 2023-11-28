@@ -2,7 +2,6 @@ import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   Button,
   DatePicker,
-  DatePickerProps,
   Flex,
   Form,
   Input,
@@ -12,11 +11,14 @@ import {
 } from 'antd';
 import locale from 'antd/es/date-picker/locale/pt_BR';
 import axios from 'axios';
-import { useState } from 'react';
+import { format, parseISO } from 'date-fns';
+import { useEffect, useState } from 'react';
 import { FieldType } from './types';
 
 export const BooksPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [data, setData] = useState([]);
+
   const { Title } = Typography;
 
   const showModal = () => {
@@ -35,42 +37,23 @@ export const BooksPage = () => {
     });
   };
 
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString);
-  };
+  const fetchData = async () => {
+    const response = await axios.get('http://localhost:8080/books', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-  const bookDataSource = [
-    {
-      key: '1',
-      name: 'The Catcher in the Rye',
-      writer: 'J.D. Salinger',
-      release: 1951,
-    },
-    {
-      key: '2',
-      name: 'To Kill a Mockingbird',
-      writer: 'Harper Lee',
-      release: 1960,
-    },
-    {
-      key: '3',
-      name: '1984',
-      writer: 'George Orwell',
-      release: 1949,
-    },
-    {
-      key: '4',
-      name: 'The Great Gatsby',
-      writer: 'F. Scott Fitzgerald',
-      release: 1925,
-    },
-    {
-      key: '5',
-      name: 'Pride and Prejudice',
-      writer: 'Jane Austen',
-      release: 1813,
-    },
-  ];
+    const data = response.data.map((item: FieldType) => {
+      return {
+        name: item.name,
+        release: format(parseISO(item.release), 'dd/MM/yyyy'),
+        writer: item.writer,
+      };
+    });
+
+    setData(data);
+  };
 
   const columns = [
     {
@@ -102,6 +85,10 @@ export const BooksPage = () => {
     },
   ];
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div>
       <Flex justify="space-between">
@@ -110,7 +97,7 @@ export const BooksPage = () => {
           Adicionar novo livro
         </Button>
       </Flex>
-      <Table dataSource={bookDataSource} columns={columns} />
+      <Table dataSource={data} columns={columns} />
       <Modal
         title="Adicionar novo livro"
         open={isModalOpen}
@@ -134,11 +121,7 @@ export const BooksPage = () => {
           </Form.Item>
 
           <Form.Item<FieldType> label="Lançamento" name="release">
-            <DatePicker
-              locale={locale}
-              format="DD/MM/YYYY"
-              onChange={onChange}
-            />
+            <DatePicker locale={locale} format="DD/MM/YYYY" />
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
