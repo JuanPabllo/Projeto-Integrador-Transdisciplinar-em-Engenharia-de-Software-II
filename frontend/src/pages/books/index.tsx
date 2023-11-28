@@ -29,14 +29,6 @@ export const BooksPage = () => {
     setIsModalOpen(false);
   };
 
-  const onFinish = async (values: FieldType) => {
-    await axios.post('http://localhost:8080/books', values, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  };
-
   const fetchData = async () => {
     const response = await axios.get('http://localhost:8080/books', {
       headers: {
@@ -53,6 +45,16 @@ export const BooksPage = () => {
     });
 
     setData(data);
+  };
+
+  const onFinish = async (values: FieldType) => {
+    await axios.post('http://localhost:8080/books', values, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    await fetchData();
   };
 
   const columns = [

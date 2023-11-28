@@ -52,6 +52,8 @@ export const MoviesPage = () => {
         'Content-Type': 'application/json',
       },
     });
+
+    await fetchData();
   };
 
   const columns = [
