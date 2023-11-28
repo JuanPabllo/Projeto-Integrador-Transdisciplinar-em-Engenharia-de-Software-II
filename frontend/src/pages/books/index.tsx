@@ -57,6 +57,16 @@ export const BooksPage = () => {
     await fetchData();
   };
 
+  const onDelete = async (name: string) => {
+    await axios.delete(`http://localhost:8080/books/${name}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    await fetchData();
+  };
+
   const columns = [
     {
       title: 'Nome',
@@ -76,12 +86,13 @@ export const BooksPage = () => {
     {
       title: 'Ações',
       key: 'action',
-      render: () => (
+      render: ({ name }: FieldType) => (
         <Button
           danger
           type="primary"
           shape="circle"
           icon={<DeleteOutlined />}
+          onClick={() => onDelete(name)}
         />
       ),
     },

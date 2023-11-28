@@ -56,6 +56,16 @@ export const MoviesPage = () => {
     await fetchData();
   };
 
+  const onDelete = async (name: string) => {
+    await axios.delete(`http://localhost:8080/movies/${name}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    await fetchData();
+  };
+
   const columns = [
     {
       title: 'Nome',
@@ -75,12 +85,13 @@ export const MoviesPage = () => {
     {
       title: 'Ações',
       key: 'action',
-      render: () => (
+      render: ({ name }: FieldType) => (
         <Button
           danger
           type="primary"
           shape="circle"
           icon={<DeleteOutlined />}
+          onClick={() => onDelete(name)}
         />
       ),
     },
