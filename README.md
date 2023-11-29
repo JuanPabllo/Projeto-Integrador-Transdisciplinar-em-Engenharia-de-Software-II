@@ -8,4 +8,4 @@
 
 ### Melhorias
 
-[] Permitir a edição de filmes e livros
+[ ] Permitir a edição de filmes e livros
